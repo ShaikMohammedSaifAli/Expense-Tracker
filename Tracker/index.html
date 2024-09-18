@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <Style>body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f0f2f5, #d9e2ec);
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+        font-size: 2.5em;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+        font-size: 1.75em;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    
+    form {
+        margin-bottom: 40px;
+    }
+    
+    input, select, button {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        box-sizing: border-box;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    input:focus, select:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 8px rgba(52, 152, 219, 0.25);
+        outline: none;
+    }
+    
+    input, select {
+        width: calc(100% - 24px);
+        padding: 14px;
+        margin-bottom: 18px;
+        font-size: 16px;
+        background-color: #f9f9f9;
+    }
+    
+    button {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s, transform 0.2s;
+    }
+    
+    button:hover {
+        background: linear-gradient(135deg, #2980b9, #1f5eae);
+        transform: scale(1.05);
+    }
+    
+    button:active {
+        transform: scale(0.98);
+    }
+    
+    .expense-list, .date-section, .date-summary {
+        margin-top: 40px;
+    }
+    
+    .expense-item {
+        padding: 20px;
+        background-color: #ffffff;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        transition: background-color 0.3s;
+    }
+    
+    .expense-item:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .expense-item div {
+        flex: 1;
+    }
+    
+    .delete-btn {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 6px;
+        transition: background 0.3s, transform 0.2s;
+    }
+    
+    .delete-btn:hover {
+        background: linear-gradient(135deg, #c0392b, #a83229);
+        transform: scale(1.05);
+    }
+    
+    .delete-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .error-message {
+        color: #e74c3c;
+        margin-top: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .date-section, .date-summary {
+        margin-top: 40px;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    th, td {
+        padding: 14px;
+        text-align: left;
+        border: 1px solid #dee2e6;
+    }
+    
+    th {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: #ffffff;
+    }
+    
+    td {
+        background-color: #ffffff;
+    }
+    
+    @media (max-width: 768px) {
+        input, select, button {
+            width: 100%;
+        }
+    }
+    
+    </Style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+
+        <div>
+            <h2>Set Total Amount by Payment Method</h2>
+            <form id="paymentBudgetForm">
+                <input type="number" id="upiBudget1" placeholder="IOB UPI">
+                <input type="number" id="upiBudget2" placeholder="SBI UPI">
+                <input type="number" id="cashBudget" placeholder="Cash">
+                <button type="submit">Set Payment Budget</button>
+            </form>
+        </div>
+
+        <div id="paymentBudgets">
+            <!-- Payment budgets will be displayed here -->
+        </div>
+
+        <form id="expenseForm">
+            <input type="number" id="amount" placeholder="Enter Amount" required>
+            <input type="text" id="description" placeholder="Description" required>
+            <select id="category" required>
+                <option value="" disabled selected>Select Category</option>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Rent">Rent</option>
+                <option value="Entertainment">Entertainment</option>
+            </select>
+            <select id="paymentMethod" required>
+                <option value="" disabled selected>Select Payment Method</option>
+                <option value="UPI1">IOB Account</option>
+                <option value="UPI2">SBI Account</option>
+                <option value="Cash">Cash</option>
+            </select>
+            <input type="date" id="date" required>
+            <button type="submit">Add Expense</button>
+        </form>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="expense-list" id="expenseList">
+            <h2>All Expenses</h2>
+        </div>
+
+        <div class="date-section">
+            <h2>Expenses by Date</h2>
+            <input type="date" id="filterDate">
+            <button id="filterExpenses">Show Expenses</button>
+            <table id="dateExpensesTable" class="date-expense" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Payment Method</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="dateExpensesBody">
+                    <!-- Expenses by date will be displayed here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="date-summary">
+            <h2>Expense Summary for Selected Date</h2>
+            <input type="date" id="summaryDateInput">
+            <button id="getDateSummary">Get Summary</button>
+            <div id="dateSummary" class="date-summary"></div>
+        </div>
+    </div>
+
+    <script>
+        const expenseForm = document.getElementById('expenseForm');
+        const paymentBudgetForm = document.getElementById('paymentBudgetForm');
+        const paymentBudgetsDiv = document.getElementById('paymentBudgets');
+        const expenseList = document.getElementById('expenseList');
+        const errorMessage = document.getElementById('errorMessage');
+        const filterDateInput = document.getElementById('filterDate');
+        const filterExpensesButton = document.getElementById('filterExpenses');
+        const dateExpensesBody = document.getElementById('dateExpensesBody');
+        const summaryDateInput = document.getElementById('summaryDateInput');
+        const getDateSummaryButton = document.getElementById('getDateSummary');
+        const dateSummaryDiv = document.getElementById('dateSummary');
+
+        let paymentBudgets = {
+            UPI1: 0,
+            UPI2: 0,
+            Cash: 0
+        };
+
+        let expenses = [];
+
+        window.onload = function() {
+            setDateToToday();
+            loadData();
+        };
+
+        function setDateToToday() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            document.getElementById('date').value = formattedDate;
+            filterDateInput.value = formattedDate;
+            summaryDateInput.value = formattedDate;
+        }
+
+        function loadData() {
+            const storedPaymentBudgets = localStorage.getItem('paymentBudgets');
+            const storedExpenses = localStorage.getItem('expenses');
+
+            if (storedPaymentBudgets) {
+                paymentBudgets = JSON.parse(storedPaymentBudgets);
+                updatePaymentBudgetsDisplay();
+            }
+
+            if (storedExpenses) {
+                expenses = JSON.parse(storedExpenses);
+                expenses.forEach(displayExpense);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('paymentBudgets', JSON.stringify(paymentBudgets));
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+        }
+
+        paymentBudgetForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            paymentBudgets.UPI1 = parseFloat(document.getElementById('upiBudget1').value) || 0;
+            paymentBudgets.UPI2 = parseFloat(document.getElementById('upiBudget2').value) || 0;
+            paymentBudgets.Cash = parseFloat(document.getElementById('cashBudget').value) || 0;
+
+            updatePaymentBudgetsDisplay();
+            saveData();
+        });
+
+        function updatePaymentBudgetsDisplay() {
+            paymentBudgetsDiv.innerHTML = ` 
+                <p><strong>IOB UPI:</strong> ₹${paymentBudgets.UPI1.toFixed(2)}</p>
+                <p><strong>SBI UPI:</strong> ₹${paymentBudgets.UPI2.toFixed(2)}</p>
+                <p><strong>Cash:</strong> ₹${paymentBudgets.Cash.toFixed(2)}</p>
+            `;
+        }
+
+        expenseForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const amount = parseFloat(document.getElementById('amount').value);
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const date = document.getElementById('date').value;
+
+            // Check if the entered expense exceeds the budget for the selected payment method
+            if (amount > (paymentBudgets[paymentMethod] || 0)) {
+                errorMessage.textContent = 'Error: Expense amount exceeds the available budget for the selected payment method.';
+                return;
+            }
+
+            const expense = { amount, description, category, paymentMethod, date, id: Date.now() };
+            expenses.push(expense);
+
+            paymentBudgets[paymentMethod] -= amount; // Subtract expense from payment method budget
+            updatePaymentBudgetsDisplay();
+            displayExpense(expense);
+            expenseForm.reset();
+
+            setDateToToday();
+            errorMessage.textContent = ''; // Clear error after successful submission
+            saveData(); // Save to local storage
+        });
+
+        function displayExpense(expense) {
+            const expenseItem = document.createElement('div');
+            expenseItem.classList.add('expense-item');
+            expenseItem.innerHTML = `
+                <div>
+                    <strong>Amount:</strong> ₹${expense.amount.toFixed(2)}<br>
+                    <strong>Description:</strong> ${expense.description}<br>
+                    <strong>Category:</strong> ${expense.category}<br>
+                    <strong>Payment Method:</strong> ${expense.paymentMethod}<br>
+                    <strong>Date:</strong> ${expense.date}
+                </div>
+                <button class="delete-btn" data-id="${expense.id}">Delete</button>
+            `;
+            expenseList.appendChild(expenseItem);
+
+            expenseItem.querySelector('.delete-btn').addEventListener('click', function() {
+                deleteExpense(expense.id);
+            });
+        }
+
+        function deleteExpense(id) {
+            const expenseIndex = expenses.findIndex(expense => expense.id === id);
+            if (expenseIndex > -1) {
+                const deletedExpense = expenses[expenseIndex];
+                paymentBudgets[deletedExpense.paymentMethod] += deletedExpense.amount; // Restore amount to payment method budget
+                updatePaymentBudgetsDisplay();
+                expenses.splice(expenseIndex, 1);
+                expenseList.innerHTML = ''; // Clear expense list
+                expenses.forEach(displayExpense); // Re-display all expenses
+                saveData();
+            }
+        }
+
+        filterExpensesButton.addEventListener('click', function() {
+            const selectedDate = filterDateInput.value;
+            dateExpensesBody.innerHTML = '';
+
+            // Filter and display expenses for the selected date
+            expenses
+                .filter(expense => expense.date === selectedDate)
+                .forEach(expense => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>₹${expense.amount.toFixed(2)}</td>
+                        <td>${expense.description}</td>
+                        <td>${expense.category}</td>
+                        <td>${expense.paymentMethod}</td>
+                        <td>${expense.date}</td>
+                    `;
+                    dateExpensesBody.appendChild(row);
+                });
+        });
+
+        getDateSummaryButton.addEventListener('click', function() {
+            const selectedDate = summaryDateInput.value;
+            const dateExpenses = expenses.filter(expense => expense.date === selectedDate);
+
+            const totalAmount = dateExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+            dateSummaryDiv.innerHTML = `
+                <p><strong>Total Expenses for ${selectedDate}:</strong> ₹${totalAmount.toFixed(2)}</p>
+            `;
+        });
+    </script>
+</body>
+</html>

@@ -14,32 +14,33 @@
         }
         
         .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 15px;
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
         }
         
         h1 {
-            font-size: 2.5em;
+            font-size: 2.2em;
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
             font-weight: 700;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         
         h2 {
-            font-size: 1.75em;
+            font-size: 1.5em;
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: 600;
         }
         
         form {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         
         input, select, button {
@@ -57,19 +58,19 @@
         
         input, select {
             width: 100%;
-            padding: 14px;
-            margin-bottom: 18px;
+            padding: 12px;
+            margin-bottom: 15px;
             font-size: 16px;
             background-color: #f9f9f9;
         }
         
         button {
-            padding: 14px 28px;
+            padding: 12px 24px;
             background: linear-gradient(135deg, #3498db, #2980b9);
             color: #ffffff;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -86,18 +87,18 @@
         }
         
         .expense-list, .date-section, .date-summary {
-            margin-top: 40px;
+            margin-top: 30px;
         }
         
         .expense-item {
-            padding: 20px;
+            padding: 15px;
             background-color: #ffffff;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             position: relative;
             transition: background-color 0.3s;
         }
@@ -108,13 +109,14 @@
         
         .expense-item div {
             flex: 1;
+            margin-bottom: 10px;
         }
         
         .delete-btn {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: #ffffff;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             cursor: pointer;
             font-size: 14px;
             border-radius: 6px;
@@ -132,23 +134,23 @@
         
         .error-message {
             color: #e74c3c;
-            margin-top: 20px;
+            margin-top: 15px;
             font-size: 14px;
             font-weight: 500;
         }
         
         .date-section, .date-summary {
-            margin-top: 40px;
+            margin-top: 30px;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
         th, td {
-            padding: 14px;
+            padding: 12px;
             text-align: left;
             border: 1px solid #dee2e6;
         }
@@ -163,33 +165,63 @@
         }
         
         @media (max-width: 768px) {
-            input, select, button {
-                width: 100%;
+            .container {
+                padding: 10px;
             }
 
-            .container {
-                padding: 20px;
-            }
-            
             h1 {
-                font-size: 2em;
+                font-size: 1.8em;
             }
             
             h2 {
-                font-size: 1.5em;
+                font-size: 1.4em;
             }
             
             .expense-item {
-                flex-direction: column;
-                align-items: flex-start;
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .delete-btn {
+                font-size: 12px;
+                padding: 6px 12px;
             }
             
-            .expense-item button {
-                margin-top: 10px;
+            table {
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            h2 {
+                font-size: 1.2em;
+            }
+            
+            input, select, button {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .expense-item {
+                padding: 10px;
+            }
+
+            .delete-btn {
+                font-size: 11px;
+                padding: 5px 10px;
             }
 
             table {
-                font-size: 14px;
+                font-size: 10px;
             }
         }
     </style>
@@ -262,18 +294,20 @@
             <h2>Expense Summary for Selected Date</h2>
             <input type="date" id="summaryDateInput">
             <button id="getDateSummary">Get Summary</button>
-            <div id="dateSummary" class="date-summary"></div>
+            <div id="dateSummary">
+                <!-- Date summary will be displayed here -->
+            </div>
         </div>
     </div>
 
     <script>
-        const expenseForm = document.getElementById('expenseForm');
         const paymentBudgetForm = document.getElementById('paymentBudgetForm');
+        const expenseForm = document.getElementById('expenseForm');
         const paymentBudgetsDiv = document.getElementById('paymentBudgets');
         const expenseList = document.getElementById('expenseList');
         const errorMessage = document.getElementById('errorMessage');
-        const filterDateInput = document.getElementById('filterDate');
         const filterExpensesButton = document.getElementById('filterExpenses');
+        const filterDateInput = document.getElementById('filterDate');
         const dateExpensesBody = document.getElementById('dateExpensesBody');
         const summaryDateInput = document.getElementById('summaryDateInput');
         const getDateSummaryButton = document.getElementById('getDateSummary');
